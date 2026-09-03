@@ -73,6 +73,9 @@ const elements = {
 };
 
 const presetSelect = document.querySelector('#preset-select');
+const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+let timezone = localStorage.getItem('aod-timezone') || systemTimezone;
+let clockFormat = localStorage.getItem('aod-clock-format') || '24';
 const timezoneSelect = document.querySelector('#timezone-select');
 const timezoneDetected = document.querySelector('#timezone-detected');
 const clockFormatSelect = document.querySelector('#clock-format');
@@ -95,9 +98,6 @@ let videoUrl = '';
 let advancedMode = false;
 let uiTheme = 'paper';
 let currentLanguage = 'en';
-const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-let timezone = localStorage.getItem('aod-timezone') || systemTimezone;
-let clockFormat = localStorage.getItem('aod-clock-format') || '24';
 const importedThemes = [];
 const translations = {
   en: {
