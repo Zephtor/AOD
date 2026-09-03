@@ -136,6 +136,12 @@ function renderSimpleWidgets() {
   elements.preview.innerHTML = `<div class="widget-stack">${simpleWidgets.map((type, index) => ({ type, index })).filter(({ type }) => enabled[type] !== false).map(({ type, index }) => `<div class="widget-item" draggable="true" data-widget-index="${index}" data-widget-type="${type}">${widgetMarkup(type)}<button class="widget-remove" type="button" title="Widget entfernen">×</button></div>`).join('')}</div>`;
 }
 
+function updateSimpleClock() {
+  if (advancedMode || !simpleWidgets.includes('clock')) return;
+  const clock = elements.preview.querySelector('.clock');
+  if (clock) clock.textContent = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+}
+
 function applyDesign() {
   elements.error.textContent = '';
   if (advancedMode) elements.preview.innerHTML = elements.html.value;
@@ -150,7 +156,9 @@ function applyDesign() {
   customStyle.textContent = '#preview-content { width: 100%; } ' + backgroundCss + simpleCss + elements.css.value;
   try {
     if (advancedMode) Function(elements.js.value)();
+    elements.saved.classList.add('is-updating');
     elements.saved.textContent = 'Gerade aktualisiert';
+    window.setTimeout(() => elements.saved.classList.remove('is-updating'), 300);
     window.setTimeout(() => { elements.saved.textContent = 'Gespeichert'; }, 1600);
   } catch (error) {
     elements.error.textContent = `JS: ${error.message}`;
@@ -291,6 +299,7 @@ function toggleAodFullscreen() {
 }
 
 document.querySelector('#fullscreen').addEventListener('click', toggleAodFullscreen);
+window.setInterval(updateSimpleClock, 1000);
 document.addEventListener('keydown', (event) => {
   const tagName = event.target.tagName;
   if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(tagName)) return;
