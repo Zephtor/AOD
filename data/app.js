@@ -412,10 +412,6 @@ function saveCurrentTheme() {
 
 function loadTheme(theme) {
   if (!theme || theme.format !== 'zephtor.aod' || typeof theme.html !== 'string' || typeof theme.css !== 'string' || typeof theme.js !== 'string') {
-    document.querySelector('#apply').addEventListener('click', () => {
-      applyDesign();
-      saveCurrentTheme();
-    });
     elements.themeMessage.textContent = 'Ungültige AOD-Datei.';
     return;
   }
@@ -450,6 +446,10 @@ function renderImportedThemes() {
 }
 
 elements.themeMessage = document.querySelector('#theme-message');
+document.querySelector('#apply').addEventListener('click', () => {
+  applyDesign();
+  saveCurrentTheme();
+});
 document.querySelector('#editor-tab').addEventListener('click', () => selectPanel('editor'));
 document.querySelector('#themes-tab').addEventListener('click', () => selectPanel('themes'));
 document.querySelector('#settings-tab').addEventListener('click', () => selectPanel('settings'));
