@@ -104,11 +104,11 @@ const translations = {
   }
 };
 const secretThemes = {
-  REDLINE: { name: 'Redline Protocol', html: defaults.html, css: '.clock { color:#ff4d4d; } .date { color:#b97878; } .meta { color:#ff7777; } #aod-screen { background:#090909; }', js: defaults.js, uiTheme: 'developer' },
-  NULLVOID: { name: 'Null Void', html: defaults.html, css: '.clock { color:#f4f4f4; } .date { color:#737373; } .meta { color:#72d8c0; } #aod-screen { background:#000; }', js: defaults.js, uiTheme: 'dark' },
-  SYNTHWAVE: { name: 'Synthwave 84', html: defaults.html, css: '.clock { color:#ff75d8; } .date { color:#8fa7ff; } .meta { color:#62f5e8; } #aod-screen { background:#170d2c; }', js: defaults.js, uiTheme: 'developer' },
-  F3MB0Y: { name: 'Femboy Theme', html: defaults.html, css: '.clock { color:#ff8fbd; } .date { color:#d89ab8; } .meta { color:#9bd7ff; } #aod-screen { background:#321a35; }', js: defaults.js, uiTheme: 'dark' },
-  FURRY: { name: 'Furry Theme', html: defaults.html, css: '.clock { color:#ffb45c; } .date { color:#d98a5a; } .meta { color:#8ed3b0; } #aod-screen { background:#182c27; }', js: defaults.js, uiTheme: 'dark' }
+  REDLINE: { format: 'zephtor.aod', version: 1, name: 'Redline Protocol', html: defaults.html, css: '.clock { color:#ff4d4d; } .date { color:#b97878; } .meta { color:#ff7777; } #aod-screen { background:#090909; }', js: defaults.js, uiTheme: 'developer' },
+  NULLVOID: { format: 'zephtor.aod', version: 1, name: 'Null Void', html: defaults.html, css: '.clock { color:#f4f4f4; } .date { color:#737373; } .meta { color:#72d8c0; } #aod-screen { background:#000; }', js: defaults.js, uiTheme: 'dark' },
+  SYNTHWAVE: { format: 'zephtor.aod', version: 1, name: 'Synthwave 84', html: defaults.html, css: '.clock { color:#ff75d8; } .date { color:#8fa7ff; } .meta { color:#62f5e8; } #aod-screen { background:#170d2c; }', js: defaults.js, uiTheme: 'developer' },
+  F3MB0Y: { format: 'zephtor.aod', version: 1, name: 'Femboy Theme', html: defaults.html, css: '.clock { color:#ff8fbd; } .date { color:#d89ab8; } .meta { color:#9bd7ff; } #aod-screen { background:#321a35; }', js: defaults.js, uiTheme: 'dark' },
+  FURRY: { format: 'zephtor.aod', version: 1, name: 'Furry Theme', html: defaults.html, css: '.clock { color:#ffb45c; } .date { color:#d98a5a; } .meta { color:#8ed3b0; } #aod-screen { background:#182c27; }', js: defaults.js, uiTheme: 'dark' }
 };
  presetOptions.forEach((preset, index) => {
   const option = document.createElement('option');
