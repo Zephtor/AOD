@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.Zephtor.AOD</id>
+  <name>AOD Studio</name>
+  <summary>Customize an always-on display with HTML, CSS and JavaScript</summary>
+  <description><p>Design a personal always-on display in a live GTK preview. Edit the HTML, CSS and JavaScript directly and apply changes instantly.</p></description>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <launchable type="desktop-id">io.github.Zephtor.AOD.desktop</launchable>
+  <url type="homepage">https://github.com/Zephtor/AOD</url>
+  <url type="bugtracker">https://github.com/Zephtor/AOD/issues</url>
+  <categories><category>Utility</category></categories>
+  <content_rating type="oars-1.1"/>
+  <releases><release version="0.1.0" date="2026-09-03"/></releases>
+</component>

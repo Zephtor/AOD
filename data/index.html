@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AOD Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span id="dynamic-logo" class="brand-mark" aria-label="AOD Logo"><span class="logo-core">A</span><span class="logo-orbit"></span></span><span>AOD <b>Studio</b></span></div>
+    <div class="topbar-actions"><span class="status-dot"></span><span>Lokale Vorschau</span><button id="fullscreen" class="icon-button" title="Vollbild">⛶</button></div>
+  </header>
+
+  <main class="workspace">
+    <section class="preview-panel">
+      <div class="section-heading"><div><span class="eyebrow">LIVE CANVAS</span><h1>Always on, exactly yours.</h1></div><span id="saved-state" class="saved">Gespeichert</span></div>
+      <div class="device-stage"><div class="aod-screen" id="aod-screen"><div id="preview-content"></div></div><div id="remove-zone" class="remove-zone">Zum Entfernen hier ablegen</div><div class="stage-label">PREVIEW / 01</div></div>
+      <div class="preview-footer"><span><i></i> 60 FPS render</span><span>1920 × 1080</span></div>
+    </section>
+
+    <aside class="editor-panel">
+      <div class="editor-intro"><span class="eyebrow">DESIGN SYSTEM</span><h2>Dein Display.</h2><p>Forme jede Information mit dem Web-Stack, den du schon kennst.</p></div>
+      <div class="panel-tabs" role="tablist"><button id="editor-tab" class="panel-tab active" type="button" role="tab">Editor</button><button id="themes-tab" class="panel-tab" type="button" role="tab">Themes</button></div>
+      <div id="editor-view">
+      <div class="mode-switch" role="group" aria-label="Bearbeitungsmodus"><button id="simple-mode" class="mode-button active" type="button">Simple</button><button id="advanced-mode" class="mode-button" type="button">Advanced</button></div>
+      <div id="simple-controls" class="simple-controls">
+        <div class="field-label">WIDGETS <span>AN / AUS</span></div>
+        <div class="widget-toggles"><label><input id="clock-toggle" type="checkbox" checked><span>Uhr</span></label><label><input id="date-toggle" type="checkbox" checked><span>Datum</span></label><label><input id="weather-toggle" type="checkbox" checked><span>Wetter</span></label><label><input id="battery-toggle" type="checkbox" checked><span>Akku</span></label></div>
+        <div class="field-label library-title">MEHR WIDGETS <span>DRAG &amp; DROP</span></div>
+        <div id="widget-library" class="widget-library"></div>
+        <label class="slider-field" for="size-slider"><span>Uhrgröße</span><output id="size-output">72px</output></label><input id="size-slider" type="range" min="36" max="150" value="72">
+        <label class="slider-field" for="opacity-slider"><span>Widget-Deckkraft</span><output id="opacity-output">100%</output></label><input id="opacity-slider" type="range" min="20" max="100" value="100">
+      </div>
+      <div class="embed-row"><label class="field-label" for="website-input">WEBSITE EINBETTEN <span>URL</span></label><div class="embed-controls"><input id="website-input" type="url" placeholder="https://example.com"><button id="embed" class="embed-button" title="Website einbetten">↗</button></div><p id="embed-error" class="error" role="alert"></p></div>
+      <div class="preset-row"><label class="field-label" for="preset-select">PRESETS <span>20 THEMES</span></label><select id="preset-select"><option value="">Theme auswählen...</option></select></div>
+      <div class="preset-row"><label class="field-label" for="background-select">ANIMIERTER HINTERGRUND <span>50 MOTIVE</span></label><select id="background-select"><option value="">Hintergrund auswählen...</option></select></div>
+      <div class="video-row"><label class="field-label" for="video-input">LOKALES VIDEO <span>MP4 / WEBM / MOV</span></label><div class="file-controls"><input id="video-input" type="file" accept="video/mp4,video/webm,video/quicktime"><button id="clear-video" class="secondary" type="button">Entfernen</button></div><p id="video-name" class="file-name">Kein Video ausgewählt</p></div>
+      <div id="advanced-controls" class="advanced-controls" hidden>
+        <label class="field-label" for="html-input">HTML <span>&lt;/&gt;</span></label>
+        <textarea id="html-input" spellcheck="false"><div class="clock">12:48</div>
+<div class="date">DIENSTAG, 03. SEPTEMBER</div>
+    <div class="meta"><span>☼ 18° BERLIN</span><span>◒ 86%</span></div></textarea>
+        <label class="field-label" for="css-input">CSS <span>✦</span></label>
+        <textarea id="css-input" spellcheck="false">.clock { color: #f1efe6; }
+.date { color: #a4a49b; }
+    .meta { color: #d4b45d; }</textarea>
+        <label class="field-label" for="js-input">JavaScript <span>JS</span></label>
+        <textarea id="js-input" spellcheck="false">const clock = document.querySelector('.clock');
+clock.textContent = new Date().toLocaleTimeString('de-DE', {
+  hour: '2-digit', minute: '2-digit'
+    });</textarea>
+      </div>
+      <div class="toolbar"><button id="reset" class="secondary">Zurücksetzen</button><button id="apply" class="primary">Anwenden <span>↗</span></button></div>
+      <p id="error" class="error" role="alert"></p>
+      </div>
+      <div id="themes-view" class="themes-view" hidden>
+        <div class="theme-section"><span class="eyebrow">APP-LOOK</span><h3>Wähle deine Arbeitsumgebung.</h3><div class="ui-theme-grid"><button class="ui-theme-card selected" data-ui-theme="paper" type="button"><span class="theme-swatch paper-swatch"></span><b>Paper</b><small>Hell und ruhig</small></button><button class="ui-theme-card" data-ui-theme="dark" type="button"><span class="theme-swatch dark-swatch"></span><b>Dark</b><small>Kontrastreich</small></button><button class="ui-theme-card" data-ui-theme="developer" type="button"><span class="theme-swatch developer-swatch"></span><b>Developer</b><small>Schwarz / Rot</small></button></div></div>
+        <div class="theme-section"><span class="eyebrow">AOD-DATEI</span><h3>Designs teilen.</h3><p>Exportiere dein aktuelles Layout oder importiere ein AOD-JSON von anderen.</p><div class="theme-actions"><button id="export-theme" class="primary" type="button">Exportieren <span>↓</span></button><label class="secondary upload-label" for="import-theme">Importieren <span>↑</span></label><input id="import-theme" type="file" accept="application/json,.json" hidden></div><p id="theme-message" class="error" role="status"></p></div>
+        <div class="theme-section secret-section"><span class="eyebrow">CLASSIFIED</span><h3>Secret Themes.</h3><p>Gib einen Freischaltcode ein, um versteckte Looks zu entdecken.</p><div class="secret-controls"><input id="secret-code" type="text" placeholder="CODE EINGEBEN" autocomplete="off"><button id="unlock-secret" class="secondary" type="button">Freischalten</button></div><p id="secret-message" class="error" role="status"></p><div id="secret-themes" class="imported-themes"></div></div>
+        <div class="theme-section"><span class="eyebrow">MEINE THEMES</span><div id="imported-themes" class="imported-themes"><p class="empty-themes">Noch keine importierten AODs.</p></div></div>
+      </div>
+    </aside>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

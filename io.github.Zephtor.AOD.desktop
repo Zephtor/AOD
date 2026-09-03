@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=AOD Studio
+Comment=Customize your always-on display with web technologies
+Exec=aod
+Icon=io.github.Zephtor.AOD
+Type=Application
+Categories=Utility;Graphics;

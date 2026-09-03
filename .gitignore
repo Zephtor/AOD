@@ -1,0 +1,5 @@
+.flatpak-builder/
+build/
+release-repo/
+*.flatpak
+.vscode/
