@@ -61,7 +61,7 @@ clock.textContent = new Date().toLocaleTimeString('de-DE', {
         <div class="theme-section"><span class="eyebrow">MEINE THEMES</span><div id="imported-themes" class="imported-themes"><p class="empty-themes">Noch keine importierten AODs.</p></div></div>
       </div>
       <div id="settings-view" class="settings-view" hidden>
-        <div class="theme-section"><span class="eyebrow">PREFERENCES</span><h3 id="settings-title">Application settings.</h3><p id="settings-description">Choose the language for the AOD Studio interface.</p><label class="field-label" for="language-select" id="language-label">LANGUAGE</label><select id="language-select"><option value="en">English</option><option value="de">Deutsch</option></select></div>
+        <div class="theme-section"><span class="eyebrow">PREFERENCES</span><h3 id="settings-title">Application settings.</h3><p id="settings-description">Choose the language, timezone and clock format for the AOD Studio interface.</p><label class="field-label" for="language-select" id="language-label">LANGUAGE</label><select id="language-select"><option value="en">English</option><option value="de">Deutsch</option></select><label class="field-label" for="timezone-select" id="timezone-label">TIMEZONE</label><div class="setting-inline"><select id="timezone-select"></select><button id="auto-timezone" class="secondary" type="button">Auto</button></div><p id="timezone-detected" class="setting-note"></p><label class="field-label" for="clock-format" id="clock-format-label">CLOCK FORMAT</label><select id="clock-format"><option value="24">24-hour</option><option value="12">12-hour</option></select></div>
       </div>
     </aside>
   </main>

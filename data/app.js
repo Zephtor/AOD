@@ -73,6 +73,19 @@ const elements = {
 };
 
 const presetSelect = document.querySelector('#preset-select');
+const timezoneSelect = document.querySelector('#timezone-select');
+const timezoneDetected = document.querySelector('#timezone-detected');
+const clockFormatSelect = document.querySelector('#clock-format');
+const supportedTimezones = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : ['UTC', 'Europe/Berlin', 'Europe/London', 'America/New_York', 'America/Los_Angeles', 'Asia/Tokyo', 'Australia/Sydney'];
+supportedTimezones.forEach((zone) => {
+  const option = document.createElement('option');
+  option.value = zone;
+  option.textContent = zone.replaceAll('_', ' ');
+  timezoneSelect.appendChild(option);
+});
+if (!supportedTimezones.includes(timezone)) timezone = systemTimezone;
+timezoneSelect.value = timezone;
+clockFormatSelect.value = clockFormat;
 const presetOptions = presets.flatMap((preset) => [
   { name: `${preset.name} · Still`, css: preset.css },
   { name: `${preset.name} · Animated`, css: preset.animatedCss }
@@ -82,6 +95,9 @@ let videoUrl = '';
 let advancedMode = false;
 let uiTheme = 'paper';
 let currentLanguage = 'en';
+const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+let timezone = localStorage.getItem('aod-timezone') || systemTimezone;
+let clockFormat = localStorage.getItem('aod-clock-format') || '24';
 const importedThemes = [];
 const translations = {
   en: {
@@ -144,7 +160,7 @@ function renderSimpleWidgets() {
 function updateSimpleClock() {
   if (advancedMode || !simpleWidgets.includes('clock')) return;
   const clock = elements.preview.querySelector('.clock');
-  if (clock) clock.textContent = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  if (clock) clock.textContent = new Date().toLocaleTimeString(currentLanguage, { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: clockFormat === '12' });
 }
 
 function applyDesign() {
@@ -243,7 +259,13 @@ function translate(language) {
   document.querySelector('#themes-view .secret-section .eyebrow').textContent = 'CLASSIFIED';
   document.querySelector('#themes-view .theme-section:nth-child(4) .eyebrow').textContent = language === 'de' ? 'MEINE THEMES' : 'MY THEMES';
   document.querySelector('#language-select').value = language;
+  document.querySelector('#timezone-label').textContent = language === 'de' ? 'ZEITZONE' : 'TIMEZONE';
+  document.querySelector('#clock-format-label').textContent = language === 'de' ? 'ZEITFORMAT' : 'CLOCK FORMAT';
+  timezoneDetected.textContent = language === 'de' ? `Systemzeitzone: ${systemTimezone}` : `System timezone: ${systemTimezone}`;
+  clockFormatSelect.options[0].textContent = language === 'de' ? '24 Stunden' : '24-hour';
+  clockFormatSelect.options[1].textContent = language === 'de' ? '12 Stunden' : '12-hour';
   localStorage.setItem('aod-language', language);
+  updateSimpleClock();
 }
 
 function embedWebsite() {
@@ -370,7 +392,7 @@ function setUiTheme(theme) {
 }
 
 function currentTheme() {
-  return { format: 'zephtor.aod', version: 1, name: 'AOD Design', html: elements.html.value, css: elements.css.value, js: elements.js.value, widgets: simpleWidgets, uiTheme };
+  return { format: 'zephtor.aod', version: 1, name: 'AOD Design', html: elements.html.value, css: elements.css.value, js: elements.js.value, widgets: simpleWidgets, uiTheme, timezone, clockFormat };
 }
 
 function saveCurrentTheme() {
@@ -402,6 +424,8 @@ function loadTheme(theme) {
   elements.js.value = theme.js;
   if (Array.isArray(theme.widgets)) simpleWidgets = theme.widgets.filter((widget) => typeof widget === 'string');
   if (theme.uiTheme) setUiTheme(theme.uiTheme);
+  if (theme.timezone && supportedTimezones.includes(theme.timezone)) { timezone = theme.timezone; timezoneSelect.value = timezone; }
+  if (theme.clockFormat === '12' || theme.clockFormat === '24') { clockFormat = theme.clockFormat; clockFormatSelect.value = clockFormat; }
   setMode('simple');
   applyDesign();
   elements.themeMessage.textContent = `${theme.name || 'AOD Design'} ${translations[currentLanguage].loaded}`;
@@ -430,6 +454,9 @@ document.querySelector('#editor-tab').addEventListener('click', () => selectPane
 document.querySelector('#themes-tab').addEventListener('click', () => selectPanel('themes'));
 document.querySelector('#settings-tab').addEventListener('click', () => selectPanel('settings'));
 document.querySelector('#language-select').addEventListener('change', (event) => translate(event.target.value));
+timezoneSelect.addEventListener('change', () => { timezone = timezoneSelect.value; localStorage.setItem('aod-timezone', timezone); updateSimpleClock(); });
+document.querySelector('#auto-timezone').addEventListener('click', () => { timezone = systemTimezone; timezoneSelect.value = timezone; localStorage.setItem('aod-timezone', timezone); updateSimpleClock(); });
+clockFormatSelect.addEventListener('change', () => { clockFormat = clockFormatSelect.value; localStorage.setItem('aod-clock-format', clockFormat); updateSimpleClock(); });
 document.querySelectorAll('.ui-theme-card').forEach((card) => card.addEventListener('click', () => setUiTheme(card.dataset.uiTheme)));
 document.querySelector('#unlock-secret').addEventListener('click', () => {
   const input = document.querySelector('#secret-code');
