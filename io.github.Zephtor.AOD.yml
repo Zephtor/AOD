@@ -15,4 +15,4 @@ modules:
     sources:
       - type: git
         url: https://github.com/Zephtor/AOD.git
-        commit: ff92c8cb1efff5108cb3cd0a0ddd93437faf32d7
+        commit: 448acdd
