@@ -39,9 +39,9 @@ const backgrounds = backgroundNames.map((name, index) => ({
 }));
 
 const widgetCatalog = [
-  ['greeting', 'Begrüßung'], ['steps', 'Schritte'], ['calendar', 'Kalender'],
-  ['quote', 'Zitat'], ['focus', 'Fokus'], ['location', 'Standort'],
-  ['sunrise', 'Sonnenaufgang'], ['network', 'Netzwerk'], ['music-wave', 'Music Wave']
+  ['greeting', 'greeting'], ['steps', 'steps'], ['calendar', 'calendar'],
+  ['quote', 'quote'], ['focus', 'focus'], ['location', 'location'],
+  ['sunrise', 'sunrise'], ['network', 'network'], ['music-wave', 'musicWave']
 ];
 let simpleWidgets = ['clock', 'date', 'weather', 'battery'];
 
@@ -81,6 +81,7 @@ let backgroundCss = '';
 let videoUrl = '';
 let advancedMode = false;
 let uiTheme = 'paper';
+let currentLanguage = 'en';
 const importedThemes = [];
 const translations = {
   en: {
@@ -88,14 +89,18 @@ const translations = {
     designSystem: 'DESIGN SYSTEM', display: 'Your display.', description: 'Shape every piece of information with the web stack you already know.',
     simple: 'Simple', advanced: 'Advanced', widgets: 'WIDGETS', moreWidgets: 'MORE WIDGETS', website: 'EMBED WEBSITE', presets: 'PRESETS', backgrounds: 'ANIMATED BACKGROUND', localVideo: 'LOCAL VIDEO',
     apply: 'Apply', reset: 'Reset', remove: 'Remove', removeDrop: 'Drop here to remove', fullscreen: 'Fullscreen', settingsTitle: 'Application settings.', settingsDescription: 'Choose the language for the AOD Studio interface.', languageLabel: 'LANGUAGE',
-    export: 'Export', import: 'Import', themesTitle: 'Designs to share.', themeDescription: 'Export your current layout or import an AOD JSON from others.', secretTitle: 'Secret Themes.', secretDescription: 'Enter an unlock code to discover hidden looks.'
+    export: 'Export', import: 'Import', themesTitle: 'Designs to share.', themeDescription: 'Export your current layout or import an AOD JSON from others.', secretTitle: 'Secret Themes.', secretDescription: 'Enter an unlock code to discover hidden looks.', emptyThemes: 'No imported AODs yet.', loaded: 'loaded.'
+    ,greeting: 'Greeting', steps: 'Steps', calendar: 'Calendar', quote: 'Quote', focus: 'Focus', location: 'Location', sunrise: 'Sunrise', network: 'Network', musicWave: 'Music Wave', clockLabel: 'Clock', dateLabel: 'Date', weatherLabel: 'Weather', batteryLabel: 'Battery', weekday: 'TUESDAY', toggleState: 'ON / OFF', dragDrop: 'DRAG & DROP', clockSize: 'Clock size', opacity: 'Widget opacity', selectTheme: 'Choose a theme...', selectBackground: 'Choose a background...',
+    goodMorning: 'Good morning', stepsLabel: 'STEPS', september: 'SEPTEMBER', quoteText: 'Today is a good day.', focusLabel: 'FOCUS', connected: 'CONNECTED', nowPlaying: 'NOW PLAYING', noVideo: 'No video selected', websiteLoaded: 'Website loaded', videoLoaded: 'Video loaded', invalidUrl: 'Please enter a URL starting with https:// or http://.', unknownCode: 'Code not recognized.', unlocked: 'unlocked.'
   },
   de: {
     editor: 'Editor', themes: 'Themes', settings: 'Einstellungen', liveCanvas: 'LIVE-VORSCHAU', saved: 'Gespeichert',
     designSystem: 'DESIGN SYSTEM', display: 'Dein Display.', description: 'Forme jede Information mit dem Web-Stack, den du schon kennst.',
     simple: 'Einfach', advanced: 'Erweitert', widgets: 'WIDGETS', moreWidgets: 'MEHR WIDGETS', website: 'WEBSITE EINBETTEN', presets: 'PRESETS', backgrounds: 'ANIMIERTER HINTERGRUND', localVideo: 'LOKALES VIDEO',
     apply: 'Anwenden', reset: 'Zurücksetzen', remove: 'Entfernen', removeDrop: 'Zum Entfernen hier ablegen', fullscreen: 'Vollbild', settingsTitle: 'App-Einstellungen.', settingsDescription: 'Wähle die Sprache für die AOD-Studio-Oberfläche.', languageLabel: 'SPRACHE',
-    export: 'Exportieren', import: 'Importieren', themesTitle: 'Designs teilen.', themeDescription: 'Exportiere dein Layout oder importiere ein AOD-JSON von anderen.', secretTitle: 'Secret Themes.', secretDescription: 'Gib einen Freischaltcode ein, um versteckte Looks zu entdecken.'
+    export: 'Exportieren', import: 'Importieren', themesTitle: 'Designs teilen.', themeDescription: 'Exportiere dein Layout oder importiere ein AOD-JSON von anderen.', secretTitle: 'Secret Themes.', secretDescription: 'Gib einen Freischaltcode ein, um versteckte Looks zu entdecken.', emptyThemes: 'Noch keine importierten AODs.', loaded: 'geladen.'
+    ,greeting: 'Begrüßung', steps: 'Schritte', calendar: 'Kalender', quote: 'Zitat', focus: 'Fokus', location: 'Standort', sunrise: 'Sonnenaufgang', network: 'Netzwerk', musicWave: 'Music Wave', clockLabel: 'Uhr', dateLabel: 'Datum', weatherLabel: 'Wetter', batteryLabel: 'Akku', weekday: 'DIENSTAG', toggleState: 'AN / AUS', dragDrop: 'ZIEHEN & ABLEGEN', clockSize: 'Uhrgröße', opacity: 'Widget-Deckkraft', selectTheme: 'Theme auswählen...', selectBackground: 'Hintergrund auswählen...',
+    goodMorning: 'Guten Morgen', stepsLabel: 'SCHRITTE', september: 'SEPTEMBER', quoteText: 'Heute ist ein guter Tag.', focusLabel: 'FOKUS', connected: 'VERBUNDEN', nowPlaying: 'NOW PLAYING', noVideo: 'Kein Video ausgewählt', websiteLoaded: 'Website geladen', videoLoaded: 'Video geladen', invalidUrl: 'Bitte eine URL mit https:// oder http:// eingeben.', unknownCode: 'Code nicht erkannt.', unlocked: 'freigeschaltet.'
   }
 };
 const secretThemes = {
@@ -115,25 +120,25 @@ const secretThemes = {
 function widgetMarkup(type) {
   const markup = {
     clock: '<div class="clock widget-value">12:48</div>',
-    date: '<div class="date widget-caption">DIENSTAG, 03. SEPTEMBER</div>',
+    date: `<div class="date widget-caption">${translations[currentLanguage].weekday}, 03. ${translations[currentLanguage].september}</div>`,
     weather: '<div class="meta widget-caption"><span>☼ 18° BERLIN</span></div>',
     battery: '<div class="meta widget-caption"><span>◒ 86%</span></div>',
-    greeting: '<div class="widget-value">Guten Morgen</div>',
-    steps: '<div class="widget-value">7.842</div><div class="widget-caption">SCHRITTE</div>',
-    calendar: '<div class="widget-value">03</div><div class="widget-caption">SEPTEMBER 2026</div>',
-    quote: '<div class="widget-caption">Heute ist ein guter Tag.</div>',
-    focus: '<div class="widget-value">25:00</div><div class="widget-caption">FOKUS</div>',
+    greeting: `<div class="widget-value">${translations[currentLanguage].goodMorning}</div>`,
+    steps: `<div class="widget-value">7.842</div><div class="widget-caption">${translations[currentLanguage].stepsLabel}</div>`,
+    calendar: `<div class="widget-value">03</div><div class="widget-caption">${translations[currentLanguage].september} 2026</div>`,
+    quote: `<div class="widget-caption">${translations[currentLanguage].quoteText}</div>`,
+    focus: `<div class="widget-value">25:00</div><div class="widget-caption">${translations[currentLanguage].focusLabel}</div>`,
     location: '<div class="widget-value">BERLIN</div><div class="widget-caption">52.52° N / 13.40° E</div>',
-    sunrise: '<div class="widget-value">06:18</div><div class="widget-caption">SONNENAUFGANG</div>',
-    network: '<div class="widget-value">WLAN</div><div class="widget-caption">VERBUNDEN</div>',
-    'music-wave': '<div class="music-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="widget-caption">NOW PLAYING</div>'
+    sunrise: `<div class="widget-value">06:18</div><div class="widget-caption">${translations[currentLanguage].sunrise.toUpperCase()}</div>`,
+    network: `<div class="widget-value">WLAN</div><div class="widget-caption">${translations[currentLanguage].connected}</div>`,
+    'music-wave': `<div class="music-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="widget-caption">${translations[currentLanguage].nowPlaying}</div>`
   };
   return markup[type] || '';
 }
 
 function renderSimpleWidgets() {
   const enabled = { clock: elements.clockToggle.checked, date: elements.dateToggle.checked, weather: elements.weatherToggle.checked, battery: elements.batteryToggle.checked };
-  elements.preview.innerHTML = `<div class="widget-stack">${simpleWidgets.map((type, index) => ({ type, index })).filter(({ type }) => enabled[type] !== false).map(({ type, index }) => `<div class="widget-item" draggable="true" data-widget-index="${index}" data-widget-type="${type}">${widgetMarkup(type)}<button class="widget-remove" type="button" title="Widget entfernen">×</button></div>`).join('')}</div>`;
+  elements.preview.innerHTML = `<div class="widget-stack">${simpleWidgets.map((type, index) => ({ type, index })).filter(({ type }) => enabled[type] !== false).map(({ type, index }) => `<div class="widget-item" draggable="true" data-widget-index="${index}" data-widget-type="${type}">${widgetMarkup(type)}<button class="widget-remove" type="button" title="${translations[currentLanguage].remove}">×</button></div>`).join('')}</div>`;
 }
 
 function updateSimpleClock() {
@@ -157,9 +162,9 @@ function applyDesign() {
   try {
     if (advancedMode) Function(elements.js.value)();
     elements.saved.classList.add('is-updating');
-    elements.saved.textContent = 'Gerade aktualisiert';
+    elements.saved.textContent = currentLanguage === 'de' ? 'Gerade aktualisiert' : 'Just updated';
     window.setTimeout(() => elements.saved.classList.remove('is-updating'), 300);
-    window.setTimeout(() => { elements.saved.textContent = 'Gespeichert'; }, 1600);
+    window.setTimeout(() => { elements.saved.textContent = translations[currentLanguage].saved; }, 1600);
   } catch (error) {
     elements.error.textContent = `JS: ${error.message}`;
   }
@@ -195,6 +200,7 @@ function updateSliders() {
 
 function translate(language) {
   const text = translations[language];
+  currentLanguage = language;
   document.documentElement.lang = language;
   const ids = { 'editor-tab': 'editor', 'themes-tab': 'themes', 'settings-tab': 'settings', 'simple-mode': 'simple', 'advanced-mode': 'advanced', apply: 'apply', reset: 'reset', 'clear-video': 'remove', 'settings-title': 'settingsTitle', 'settings-description': 'settingsDescription', 'language-label': 'languageLabel' };
   Object.entries(ids).forEach(([id, key]) => { const node = document.querySelector(`#${id}`); if (node) node.textContent = text[key]; });
@@ -204,13 +210,37 @@ function translate(language) {
   document.querySelector('.editor-intro h2').textContent = text.display;
   document.querySelector('.editor-intro p').textContent = text.description;
   document.querySelector('#remove-zone').textContent = text.removeDrop;
+  document.querySelector('.topbar-actions span:not(.status-dot)').textContent = language === 'de' ? 'Lokale Vorschau' : 'Local preview';
   document.querySelector('#export-theme').childNodes[0].textContent = `${text.export} `;
   document.querySelector('.upload-label').childNodes[0].textContent = `${text.import} `;
+  document.querySelector('#website-input').placeholder = language === 'de' ? 'https://beispiel.de' : 'https://example.com';
+  document.querySelector('#secret-code').placeholder = language === 'de' ? 'CODE EINGEBEN' : 'ENTER CODE';
+  const fieldLabels = document.querySelectorAll('#simple-controls > .field-label, .embed-row .field-label, .preset-row .field-label, .video-row .field-label');
+  const fieldKeys = ['widgets', 'moreWidgets', 'website', 'presets', 'backgrounds', 'localVideo'];
+  fieldLabels.forEach((label, index) => { if (text[fieldKeys[index]]) label.childNodes[0].textContent = text[fieldKeys[index]]; });
+  document.querySelectorAll('.widget-tool').forEach((tool) => { tool.textContent = text[tool.dataset.widgetKey]; });
+  document.querySelectorAll('.widget-toggles label span').forEach((label, index) => { label.textContent = text[['clockLabel', 'dateLabel', 'weatherLabel', 'batteryLabel'][index]]; });
+  document.querySelector('.widget-toggles').previousElementSibling.childNodes[0].textContent = text.widgets;
+  document.querySelector('.library-title').childNodes[0].textContent = text.moreWidgets;
+  document.querySelector('.widget-toggles').previousElementSibling.querySelector('span').textContent = text.toggleState;
+  document.querySelector('.library-title span').textContent = text.dragDrop;
+  document.querySelectorAll('.slider-field span')[0].textContent = text.clockSize;
+  document.querySelectorAll('.slider-field span')[1].textContent = text.opacity;
+  document.querySelector('#preset-select option:first-child').textContent = text.selectTheme;
+  document.querySelector('#background-select option:first-child').textContent = text.selectBackground;
+  document.querySelector('#themes-view .theme-section:first-child .eyebrow').textContent = language === 'de' ? 'APP-LOOK' : 'APP LOOK';
+  document.querySelectorAll('.ui-theme-card small')[0].textContent = language === 'de' ? 'Hell und ruhig' : 'Light and calm';
+  document.querySelectorAll('.ui-theme-card small')[1].textContent = language === 'de' ? 'Kontrastreich' : 'High contrast';
+  document.querySelectorAll('.ui-theme-card small')[2].textContent = language === 'de' ? 'Schwarz / Rot' : 'Black / red';
+  if (!advancedMode) renderSimpleWidgets();
   document.querySelector('#themes-view .theme-section:first-child h3').textContent = language === 'de' ? 'Wähle deine Arbeitsumgebung.' : 'Choose your workspace look.';
   document.querySelector('#themes-view .theme-section:nth-child(2) h3').textContent = text.themesTitle;
   document.querySelector('#themes-view .theme-section:nth-child(2) p').textContent = text.themeDescription;
   document.querySelector('#themes-view .secret-section h3').textContent = text.secretTitle;
   document.querySelector('#themes-view .secret-section p').textContent = text.secretDescription;
+  document.querySelector('#themes-view .theme-section:nth-child(2) .eyebrow').textContent = language === 'de' ? 'AOD-DATEI' : 'AOD FILE';
+  document.querySelector('#themes-view .secret-section .eyebrow').textContent = 'CLASSIFIED';
+  document.querySelector('#themes-view .theme-section:nth-child(4) .eyebrow').textContent = language === 'de' ? 'MEINE THEMES' : 'MY THEMES';
   document.querySelector('#language-select').value = language;
   localStorage.setItem('aod-language', language);
 }
@@ -219,7 +249,7 @@ function embedWebsite() {
   const url = elements.website.value.trim();
   elements.embedError.textContent = '';
   if (!/^https?:\/\//i.test(url)) {
-    elements.embedError.textContent = 'Bitte eine URL mit https:// oder http:// eingeben.';
+    elements.embedError.textContent = translations[currentLanguage].invalidUrl;
     return;
   }
   const frame = document.createElement('iframe');
@@ -227,7 +257,7 @@ function embedWebsite() {
   frame.title = 'Eingebettete Website';
   frame.src = url;
   elements.preview.replaceChildren(frame);
-  elements.saved.textContent = 'Website geladen';
+  elements.saved.textContent = translations[currentLanguage].websiteLoaded;
 }
 
 document.querySelector('#apply').addEventListener('click', applyDesign);
@@ -277,14 +307,14 @@ elements.videoInput.addEventListener('change', () => {
   video.playsInline = true;
   elements.screen.prepend(video);
   elements.videoName.textContent = file.name;
-  elements.saved.textContent = 'Video geladen';
+  elements.saved.textContent = currentLanguage === 'de' ? 'Video geladen' : 'Video loaded';
 });
 document.querySelector('#clear-video').addEventListener('click', () => {
   elements.screen.querySelector('.video-background')?.remove();
   if (videoUrl) URL.revokeObjectURL(videoUrl);
   videoUrl = '';
   elements.videoInput.value = '';
-  elements.videoName.textContent = 'Kein Video ausgewählt';
+  elements.videoName.textContent = translations[currentLanguage].noVideo;
 });
 document.querySelector('#reset').addEventListener('click', () => {
   elements.html.value = defaults.html;
@@ -349,13 +379,13 @@ function loadTheme(theme) {
   if (theme.uiTheme) setUiTheme(theme.uiTheme);
   setMode('simple');
   applyDesign();
-  elements.themeMessage.textContent = `${theme.name || 'AOD Design'} geladen.`;
+  elements.themeMessage.textContent = `${theme.name || 'AOD Design'} ${translations[currentLanguage].loaded}`;
   selectPanel('editor');
 }
 
 function renderImportedThemes() {
   const target = document.querySelector('#imported-themes');
-  target.innerHTML = importedThemes.length ? '' : '<p class="empty-themes">Noch keine importierten AODs.</p>';
+  target.innerHTML = importedThemes.length ? '' : `<p class="empty-themes">${translations[currentLanguage].emptyThemes}</p>`;
   importedThemes.forEach((theme, index) => {
     const row = document.createElement('div');
     row.className = 'imported-theme';
@@ -381,7 +411,7 @@ document.querySelector('#unlock-secret').addEventListener('click', () => {
   const code = input.value.trim().toUpperCase();
   const theme = secretThemes[code];
   if (!theme) {
-    document.querySelector('#secret-message').textContent = 'Code nicht erkannt.';
+    document.querySelector('#secret-message').textContent = translations[currentLanguage].unknownCode;
     return;
   }
   if (!importedThemes.some((item) => item.name === theme.name)) importedThemes.push(theme);
@@ -389,7 +419,7 @@ document.querySelector('#unlock-secret').addEventListener('click', () => {
   const secretList = document.querySelector('#secret-themes');
   secretList.innerHTML = `<div class="imported-theme secret-theme"><span>${theme.name}</span><button type="button">Laden</button></div>`;
   secretList.querySelector('button').addEventListener('click', () => loadTheme(theme));
-  document.querySelector('#secret-message').textContent = `${theme.name} freigeschaltet.`;
+  document.querySelector('#secret-message').textContent = `${theme.name} ${translations[currentLanguage].unlocked}`;
   input.value = '';
 });
 
@@ -399,7 +429,8 @@ widgetCatalog.forEach(([type, label]) => {
   tool.type = 'button';
   tool.draggable = true;
   tool.dataset.widgetType = type;
-  tool.textContent = label;
+  tool.dataset.widgetKey = label;
+  tool.textContent = translations[currentLanguage][label];
   tool.addEventListener('click', () => addWidget(type));
   tool.addEventListener('dragstart', (event) => event.dataTransfer.setData('widget-type', type));
   document.querySelector('#widget-library').appendChild(tool);
