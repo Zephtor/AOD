@@ -82,6 +82,22 @@ let videoUrl = '';
 let advancedMode = false;
 let uiTheme = 'paper';
 const importedThemes = [];
+const translations = {
+  en: {
+    editor: 'Editor', themes: 'Themes', settings: 'Settings', liveCanvas: 'LIVE CANVAS', saved: 'Saved',
+    designSystem: 'DESIGN SYSTEM', display: 'Your display.', description: 'Shape every piece of information with the web stack you already know.',
+    simple: 'Simple', advanced: 'Advanced', widgets: 'WIDGETS', moreWidgets: 'MORE WIDGETS', website: 'EMBED WEBSITE', presets: 'PRESETS', backgrounds: 'ANIMATED BACKGROUND', localVideo: 'LOCAL VIDEO',
+    apply: 'Apply', reset: 'Reset', remove: 'Remove', removeDrop: 'Drop here to remove', fullscreen: 'Fullscreen', settingsTitle: 'Application settings.', settingsDescription: 'Choose the language for the AOD Studio interface.', languageLabel: 'LANGUAGE',
+    export: 'Export', import: 'Import', themesTitle: 'Designs to share.', themeDescription: 'Export your current layout or import an AOD JSON from others.', secretTitle: 'Secret Themes.', secretDescription: 'Enter an unlock code to discover hidden looks.'
+  },
+  de: {
+    editor: 'Editor', themes: 'Themes', settings: 'Einstellungen', liveCanvas: 'LIVE-VORSCHAU', saved: 'Gespeichert',
+    designSystem: 'DESIGN SYSTEM', display: 'Dein Display.', description: 'Forme jede Information mit dem Web-Stack, den du schon kennst.',
+    simple: 'Einfach', advanced: 'Erweitert', widgets: 'WIDGETS', moreWidgets: 'MEHR WIDGETS', website: 'WEBSITE EINBETTEN', presets: 'PRESETS', backgrounds: 'ANIMIERTER HINTERGRUND', localVideo: 'LOKALES VIDEO',
+    apply: 'Anwenden', reset: 'Zurücksetzen', remove: 'Entfernen', removeDrop: 'Zum Entfernen hier ablegen', fullscreen: 'Vollbild', settingsTitle: 'App-Einstellungen.', settingsDescription: 'Wähle die Sprache für die AOD-Studio-Oberfläche.', languageLabel: 'SPRACHE',
+    export: 'Exportieren', import: 'Importieren', themesTitle: 'Designs teilen.', themeDescription: 'Exportiere dein Layout oder importiere ein AOD-JSON von anderen.', secretTitle: 'Secret Themes.', secretDescription: 'Gib einen Freischaltcode ein, um versteckte Looks zu entdecken.'
+  }
+};
 const secretThemes = {
   REDLINE: { name: 'Redline Protocol', html: defaults.html, css: '.clock { color:#ff4d4d; } .date { color:#b97878; } .meta { color:#ff7777; } #aod-screen { background:#090909; }', js: defaults.js, uiTheme: 'developer' },
   NULLVOID: { name: 'Null Void', html: defaults.html, css: '.clock { color:#f4f4f4; } .date { color:#737373; } .meta { color:#72d8c0; } #aod-screen { background:#000; }', js: defaults.js, uiTheme: 'dark' },
@@ -167,6 +183,28 @@ function updateSliders() {
   elements.opacityOutput.value = `${elements.opacitySlider.value}%`;
   elements.opacityOutput.textContent = `${elements.opacitySlider.value}%`;
   applyDesign();
+}
+
+function translate(language) {
+  const text = translations[language];
+  document.documentElement.lang = language;
+  const ids = { 'editor-tab': 'editor', 'themes-tab': 'themes', 'settings-tab': 'settings', 'simple-mode': 'simple', 'advanced-mode': 'advanced', apply: 'apply', reset: 'reset', 'clear-video': 'remove', 'settings-title': 'settingsTitle', 'settings-description': 'settingsDescription', 'language-label': 'languageLabel' };
+  Object.entries(ids).forEach(([id, key]) => { const node = document.querySelector(`#${id}`); if (node) node.textContent = text[key]; });
+  document.querySelector('.section-heading .eyebrow').textContent = text.liveCanvas;
+  document.querySelector('.saved').textContent = text.saved;
+  document.querySelector('.editor-intro .eyebrow').textContent = text.designSystem;
+  document.querySelector('.editor-intro h2').textContent = text.display;
+  document.querySelector('.editor-intro p').textContent = text.description;
+  document.querySelector('#remove-zone').textContent = text.removeDrop;
+  document.querySelector('#export-theme').childNodes[0].textContent = `${text.export} `;
+  document.querySelector('.upload-label').childNodes[0].textContent = `${text.import} `;
+  document.querySelector('#themes-view .theme-section:first-child h3').textContent = language === 'de' ? 'Wähle deine Arbeitsumgebung.' : 'Choose your workspace look.';
+  document.querySelector('#themes-view .theme-section:nth-child(2) h3').textContent = text.themesTitle;
+  document.querySelector('#themes-view .theme-section:nth-child(2) p').textContent = text.themeDescription;
+  document.querySelector('#themes-view .secret-section h3').textContent = text.secretTitle;
+  document.querySelector('#themes-view .secret-section p').textContent = text.secretDescription;
+  document.querySelector('#language-select').value = language;
+  localStorage.setItem('aod-language', language);
 }
 
 function embedWebsite() {
@@ -271,10 +309,13 @@ window.setInterval(() => {
 
 function selectPanel(panel) {
   const themes = panel === 'themes';
-  document.querySelector('#editor-view').hidden = themes;
+  const settings = panel === 'settings';
+  document.querySelector('#editor-view').hidden = themes || settings;
   document.querySelector('#themes-view').hidden = !themes;
-  document.querySelector('#editor-tab').classList.toggle('active', !themes);
+  document.querySelector('#settings-view').hidden = !settings;
+  document.querySelector('#editor-tab').classList.toggle('active', !themes && !settings);
   document.querySelector('#themes-tab').classList.toggle('active', themes);
+  document.querySelector('#settings-tab').classList.toggle('active', settings);
 }
 
 function setUiTheme(theme) {
@@ -323,6 +364,8 @@ function renderImportedThemes() {
 elements.themeMessage = document.querySelector('#theme-message');
 document.querySelector('#editor-tab').addEventListener('click', () => selectPanel('editor'));
 document.querySelector('#themes-tab').addEventListener('click', () => selectPanel('themes'));
+document.querySelector('#settings-tab').addEventListener('click', () => selectPanel('settings'));
+document.querySelector('#language-select').addEventListener('change', (event) => translate(event.target.value));
 document.querySelectorAll('.ui-theme-card').forEach((card) => card.addEventListener('click', () => setUiTheme(card.dataset.uiTheme)));
 document.querySelector('#export-theme').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(currentTheme(), null, 2)], { type: 'application/json' });
@@ -412,3 +455,4 @@ document.querySelector('#remove-zone').addEventListener('drop', (event) => {
 });
 applyDesign();
 setUiTheme('paper');
+translate(localStorage.getItem('aod-language') || 'en');

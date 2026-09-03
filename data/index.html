@@ -21,7 +21,7 @@
 
     <aside class="editor-panel">
       <div class="editor-intro"><span class="eyebrow">DESIGN SYSTEM</span><h2>Dein Display.</h2><p>Forme jede Information mit dem Web-Stack, den du schon kennst.</p></div>
-      <div class="panel-tabs" role="tablist"><button id="editor-tab" class="panel-tab active" type="button" role="tab">Editor</button><button id="themes-tab" class="panel-tab" type="button" role="tab">Themes</button></div>
+      <div class="panel-tabs" role="tablist"><button id="editor-tab" class="panel-tab active" type="button" role="tab">Editor</button><button id="themes-tab" class="panel-tab" type="button" role="tab">Themes</button><button id="settings-tab" class="panel-tab" type="button" role="tab">Settings</button></div>
       <div id="editor-view">
       <div class="mode-switch" role="group" aria-label="Bearbeitungsmodus"><button id="simple-mode" class="mode-button active" type="button">Simple</button><button id="advanced-mode" class="mode-button" type="button">Advanced</button></div>
       <div id="simple-controls" class="simple-controls">
@@ -59,6 +59,9 @@ clock.textContent = new Date().toLocaleTimeString('de-DE', {
         <div class="theme-section"><span class="eyebrow">AOD-DATEI</span><h3>Designs teilen.</h3><p>Exportiere dein aktuelles Layout oder importiere ein AOD-JSON von anderen.</p><div class="theme-actions"><button id="export-theme" class="primary" type="button">Exportieren <span>↓</span></button><label class="secondary upload-label" for="import-theme">Importieren <span>↑</span></label><input id="import-theme" type="file" accept="application/json,.json" hidden></div><p id="theme-message" class="error" role="status"></p></div>
         <div class="theme-section secret-section"><span class="eyebrow">CLASSIFIED</span><h3>Secret Themes.</h3><p>Gib einen Freischaltcode ein, um versteckte Looks zu entdecken.</p><div class="secret-controls"><input id="secret-code" type="text" placeholder="CODE EINGEBEN" autocomplete="off"><button id="unlock-secret" class="secondary" type="button">Freischalten</button></div><p id="secret-message" class="error" role="status"></p><div id="secret-themes" class="imported-themes"></div></div>
         <div class="theme-section"><span class="eyebrow">MEINE THEMES</span><div id="imported-themes" class="imported-themes"><p class="empty-themes">Noch keine importierten AODs.</p></div></div>
+      </div>
+      <div id="settings-view" class="settings-view" hidden>
+        <div class="theme-section"><span class="eyebrow">PREFERENCES</span><h3 id="settings-title">Application settings.</h3><p id="settings-description">Choose the language for the AOD Studio interface.</p><label class="field-label" for="language-select" id="language-label">LANGUAGE</label><select id="language-select"><option value="en">English</option><option value="de">Deutsch</option></select></div>
       </div>
     </aside>
   </main>
