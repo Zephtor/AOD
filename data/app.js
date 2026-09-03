@@ -328,6 +328,10 @@ function toggleAodFullscreen() {
   else elements.screen.requestFullscreen?.();
 }
 
+document.addEventListener('fullscreenchange', () => {
+  document.body.dataset.displayMode = document.fullscreenElement ? 'active' : 'inactive';
+});
+
 document.querySelector('#fullscreen').addEventListener('click', toggleAodFullscreen);
 window.setInterval(updateSimpleClock, 1000);
 document.addEventListener('keydown', (event) => {
@@ -349,6 +353,7 @@ window.setInterval(() => {
 function selectPanel(panel) {
   const themes = panel === 'themes';
   const settings = panel === 'settings';
+  document.body.dataset.panel = panel;
   document.querySelector('#editor-view').hidden = themes || settings;
   document.querySelector('#themes-view').hidden = !themes;
   document.querySelector('#settings-view').hidden = !settings;
