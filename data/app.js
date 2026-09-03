@@ -173,6 +173,7 @@ function applyDesign() {
 function setMode(mode) {
   const advanced = mode === 'advanced';
   advancedMode = advanced;
+  document.body.dataset.editMode = advanced ? 'advanced' : 'simple';
   elements.simpleControls.hidden = advanced;
   elements.advancedControls.hidden = !advanced;
   elements.simpleMode.classList.toggle('active', !advanced);
