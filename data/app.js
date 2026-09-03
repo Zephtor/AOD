@@ -367,29 +367,6 @@ document.querySelector('#themes-tab').addEventListener('click', () => selectPane
 document.querySelector('#settings-tab').addEventListener('click', () => selectPanel('settings'));
 document.querySelector('#language-select').addEventListener('change', (event) => translate(event.target.value));
 document.querySelectorAll('.ui-theme-card').forEach((card) => card.addEventListener('click', () => setUiTheme(card.dataset.uiTheme)));
-document.querySelector('#export-theme').addEventListener('click', () => {
-  const blob = new Blob([JSON.stringify(currentTheme(), null, 2)], { type: 'application/json' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'aod-design.json';
-  link.click();
-  URL.revokeObjectURL(link.href);
-  elements.themeMessage.textContent = 'AOD-Datei exportiert.';
-});
-document.querySelector('#import-theme').addEventListener('change', async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  try {
-    const theme = JSON.parse(await file.text());
-    if (typeof theme.html !== 'string' || typeof theme.css !== 'string' || typeof theme.js !== 'string') throw new Error('invalid');
-    importedThemes.push(theme);
-    renderImportedThemes();
-    elements.themeMessage.textContent = `${theme.name || file.name} importiert.`;
-  } catch (error) {
-    elements.themeMessage.textContent = 'Die JSON-Datei konnte nicht gelesen werden.';
-  }
-  event.target.value = '';
-});
 document.querySelector('#unlock-secret').addEventListener('click', () => {
   const input = document.querySelector('#secret-code');
   const code = input.value.trim().toUpperCase();
