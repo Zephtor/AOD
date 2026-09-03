@@ -369,11 +369,30 @@ function setUiTheme(theme) {
 }
 
 function currentTheme() {
-  return { name: 'AOD Design', html: elements.html.value, css: elements.css.value, js: elements.js.value, widgets: simpleWidgets, uiTheme };
+  return { format: 'zephtor.aod', version: 1, name: 'AOD Design', html: elements.html.value, css: elements.css.value, js: elements.js.value, widgets: simpleWidgets, uiTheme };
+}
+
+function saveCurrentTheme() {
+  const theme = currentTheme();
+  const history = JSON.parse(localStorage.getItem('aod-themes') || '[]');
+  history.unshift({ ...theme, savedAt: new Date().toISOString() });
+  localStorage.setItem('aod-themes', JSON.stringify(history.slice(0, 50)));
+  localStorage.setItem('aod-last-theme', JSON.stringify(theme));
+  const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/vnd.zephtor.aod+json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `aod-${Date.now()}.zephtor.aod`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+  elements.saved.textContent = currentLanguage === 'de' ? 'In Dokumente gespeichert' : 'Saved to Documents';
 }
 
 function loadTheme(theme) {
-  if (!theme || typeof theme.html !== 'string' || typeof theme.css !== 'string' || typeof theme.js !== 'string') {
+  if (!theme || theme.format !== 'zephtor.aod' || typeof theme.html !== 'string' || typeof theme.css !== 'string' || typeof theme.js !== 'string') {
+    document.querySelector('#apply').addEventListener('click', () => {
+      applyDesign();
+      saveCurrentTheme();
+    });
     elements.themeMessage.textContent = 'Ungültige AOD-Datei.';
     return;
   }
@@ -478,3 +497,5 @@ document.querySelector('#remove-zone').addEventListener('drop', (event) => {
 applyDesign();
 setUiTheme('paper');
 translate(localStorage.getItem('aod-language') || 'en');
+const lastTheme = JSON.parse(localStorage.getItem('aod-last-theme') || 'null');
+if (lastTheme?.format === 'zephtor.aod') loadTheme(lastTheme);

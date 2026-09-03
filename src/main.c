@@ -1,6 +1,24 @@
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 
+static gboolean choose_download_destination(WebKitDownload *download, const gchar *suggested_filename, gpointer user_data) {
+  (void) user_data;
+  const gchar *documents = g_get_user_special_dir(G_USER_DIRECTORY_DOCUMENTS);
+  if (!documents) return FALSE;
+  gchar *path = g_build_filename(documents, suggested_filename, NULL);
+  gchar *uri = g_filename_to_uri(path, NULL, NULL);
+  webkit_download_set_destination(download, uri);
+  g_free(uri);
+  g_free(path);
+  return TRUE;
+}
+
+static void download_started(WebKitWebContext *context, WebKitDownload *download, gpointer user_data) {
+  (void) context;
+  (void) user_data;
+  g_signal_connect(download, "decide-destination", G_CALLBACK(choose_download_destination), NULL);
+}
+
 static void activate(GtkApplication *app, gpointer user_data) {
   (void) user_data;
   GtkWidget *window = gtk_application_window_new(app);
@@ -8,6 +26,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
   gtk_window_set_default_size(GTK_WINDOW(window), 1280, 820);
 
   GtkWidget *view = webkit_web_view_new();
+  g_signal_connect(webkit_web_view_get_context(WEBKIT_WEB_VIEW(view)), "download-started", G_CALLBACK(download_started), NULL);
   gchar *path = g_build_filename("/app", "share", "aod", "index.html", NULL);
   gchar *uri = g_filename_to_uri(path, NULL, NULL);
   webkit_web_view_load_uri(WEBKIT_WEB_VIEW(view), uri);
