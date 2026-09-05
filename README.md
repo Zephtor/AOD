@@ -12,3 +12,6 @@ flatpak run io.github.Zephtor.AOD
 ```
 
 The editor itself is local. Embedded websites use the Flatpak's network permission and may still refuse iframe embedding through their own security headers. `data/index.html`, `data/style.css`, and `data/app.js` are installed as the app's editable web surface. The native code only creates the GTK window and loads the web UI.
+
+# ACKNOWLEDGMENTS
+This project uses an AI automated promotion system: https://bizbot.zvo.cn
